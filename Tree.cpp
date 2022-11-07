@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Nodo::Nodo(){
+Nodo::Nodo(){ // Constructor de un Nodo vacío
 	this->dato = "";
     this->numPag = "";
 	this->der = nullptr;
@@ -15,7 +15,7 @@ Nodo::Nodo(){
     this->pag = nullptr;
 }
 
-Nodo::Nodo(string dato, string n, Nodo* sub, Nodo* pag){
+Nodo::Nodo(string dato, string n, Nodo* sub, Nodo* pag){ // Constructor de un Nodo con todos sus datos
 	this->dato = dato;
     this->numPag = n;
 	this->der = nullptr;
@@ -24,52 +24,45 @@ Nodo::Nodo(string dato, string n, Nodo* sub, Nodo* pag){
     this->pag = pag;
 }
 
+
+// Agrega un nuevo Nodo invocando al Constructor Nodo según los valores recibidos
 void Nodo::agregarNodo(Nodo *&arbol, string dato, string n, Nodo *&subTer, Nodo *&pag){
-	//cout<<("Ingresa a agregarNodo")<<endl;
 	if(arbol == NULL){//verificando que arbol este vacio.
 		Nodo *nuevoNodo = new Nodo(dato, n, subTer, pag);//agregando la raiz al nuevo Nodo.
 		arbol = nuevoNodo;
-		//cout<<("Nodo raiz creado")<<endl;
 	}else{
 		string ValorDeRaiz = arbol->dato;//Es para saber que valor tiene la RAIZ.
 		if(dato < ValorDeRaiz){//Cuando el Valor es menor va al lado izquierdo.
 			agregarNodo(arbol->izq, dato, n, subTer, pag);//Agregando al lado izquierdo.
-			//cout<<("Nodo izquierdo creado")<<endl;
 		}else{
 			agregarNodo(arbol->der, dato, n, subTer, pag);//Agregando al lado derecho.
-			//cout<<("Nodo derecho creado")<<endl;
 		}
 	}
 }
 
+// Recorre recursivamente el arbol para imprimir los Términos, Subtérminos y Páginas de manera ordenada
 void Nodo::imprimir (Nodo *arbol){	
     if (arbol == NULL){
-        return;
+        return; 
     }
-    else{
-		
-		//imprimir(arbol->sub);			
+    else{				
         imprimir(arbol->izq);
-		imprimir(arbol->sub);		
-		
-		if(arbol->dato!=""){		
+			if(arbol->dato!=""){	
         	cout<<arbol->dato<<" | "<<arbol->numPag<<" | ";
-			impPag(arbol->pag);
+			impPag(arbol->pag); // Llama a la función para imprimir las páginas enviando el respectivo Nodo
 			cout<<endl;
+			imprimir(arbol->sub); // Se invoca a si misma enviando el Nodo de los Subtérminos		
 		}
         imprimir(arbol->der);
-		//cout<<arbol->dato<<" | "<<arbol->numPag<<" | "<<endl;
     }
 }
 
+
+// Función que imprime las paginas de forma ordenada utilizando la recursividad
 void Nodo::impPag (Nodo *arbol){
-	//cout<<"entra a paginas "<< arbol<<endl;
-	//string pagi=p;
     if (arbol == NULL){
         return; 
-	}else{
-
-		
+	}else{		
 		impPag(arbol->izq);
 		if(arbol->dato!=""){			
 			cout<<arbol->dato;
@@ -79,12 +72,19 @@ void Nodo::impPag (Nodo *arbol){
 	}
 }
 
+
+// Imprime el Término buscado y con sus Subtérminos y atributos
 void Nodo::buscar(Nodo *arbol, string dato){
     if (arbol == NULL){
-       cout<<"Arbol vacio"<<endl;
+       return;
     }
     else if(arbol->dato == dato){
-        cout<<arbol->dato<<" | "<<arbol->numPag<<" | "<<arbol->sub<< endl;
+        	cout<<arbol->dato<<" | "<<arbol->numPag<<" | ";
+			impPag(arbol->pag); // Llama a la función para imprimir las páginas
+			cout<<endl;
+			imprimir(arbol->sub); // Se invoca a si misma enviando el Nodo de los Subtérminos		
+			cout<<endl;
+			return;
     }
     else if(dato < arbol->dato){
         return buscar(arbol->izq, dato);
@@ -94,21 +94,16 @@ void Nodo::buscar(Nodo *arbol, string dato){
     }
 }
 
-Nodo* Nodo::buscarSub(Nodo *arbol, string dato){
-    if (arbol == NULL){
-		//cout<<"NULL en buscarSub: " <<endl;
-        return {};
+// Imprime el subtérmino buscado y sus atributos
+void Nodo::buscarSub(Nodo *arbol, string dato){
+	//string termino;
+	if (arbol == NULL){
+        return; 
     }
-    else if(arbol->dato == dato){
-		//cout<<"Funcion buscarSub: "<< arbol->sub <<" para "<< arbol->dato<<endl;
-        return arbol->sub;
-    }
-    else if(dato < arbol->dato){
-		//cout<<"Buscando por la izquierda: "<< arbol->dato<<endl;
-        return buscarSub(arbol->izq, dato);
-    }
-    else {
-		//cout<<"Buscando por la derecha: "<< arbol->dato<<endl;
-        return buscarSub(arbol->der, dato);
-    }
+    else{		
+		buscarSub(arbol->izq, dato);
+		buscar(arbol->sub, dato);
+		buscarSub(arbol->der, dato);
+	}
+		
 }
