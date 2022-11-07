@@ -20,5 +20,5 @@ class Nodo{
 		void imprimir (Nodo*);
         void impPag (Nodo*);
         void buscar(Nodo*, string);
-        Nodo* buscarSub(Nodo*, string);
+        void buscarSub(Nodo*, string);
 };
