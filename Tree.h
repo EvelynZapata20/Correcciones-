@@ -1,24 +1,24 @@
-#ifndef TALLER_2___DATOS_TREE_H
-#define TALLER_2___DATOS_TREE_H
+#include<iostream>
+#include<conio.h>
+#include<stdlib.h>
 
-#include<string>
 using namespace std;
 
-class Node{
-public:
-    string mainterm;
-    int contpages;
-    Node *pages;
-    Node *subterms;
-    Node *left;
-    Node *right;
+class Nodo{    
 
-    Node();
-    Node(string m, int c,Node* p, Node* s);
-    Node *createNode(string, int);
-    void insertNode(Node *&, string, int);
-    void seeMainTree(Node *);
+	public:
+        Nodo *der;
+        Nodo *izq;
+        Nodo *pag;
+        Nodo *sub;
+        string dato;
+        string numPag;
+
+		Nodo();	
+		Nodo(string, string, Nodo*, Nodo*);
+		void agregarNodo(Nodo*&, string, string, Nodo*&, Nodo*&);
+		void imprimir (Nodo*);
+        void impPag (Nodo*);
+        void buscar(Nodo*, string);
+        Nodo* buscarSub(Nodo*, string);
 };
-
-
-#endif //TALLER_2___DATOS_TREE_H
