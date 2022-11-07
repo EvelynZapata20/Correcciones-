@@ -4,7 +4,6 @@
 #include<stdlib.h>
 #include <algorithm>
 #include "File.h"
-//#include "Tree.h"
 using namespace std;
 
 string numeros = "0123456789";
@@ -14,7 +13,9 @@ Nodo* empty;
 
 File::File(){}
 
-void File::lectura(){
+// Lée el archivo de índices y envía cada línea
+// al método split() para su procesamiento
+Nodo* File::lectura(){ 
     ifstream file;
     string texto;
 
@@ -31,14 +32,15 @@ void File::lectura(){
         getline(file,texto);        
         split(arbol, texto);       
     }
-    file.close();
-    
-    cout<<"---- Imprimiendo Arbol ----\n"<<endl;
-    arbol->imprimir(arbol);
-    //arbol->imprimir(arbol->buscarSub(arbol,"Aves"));
+    file.close();  
+    cout<<"Arbol creado exitosamente!\n";
+    return arbol;
 }
 
-void File::split(Nodo* arbol, string text){
+
+// Recibe un string y lo separa para clasificarlo y hallar sus páginas
+// antes de insertar el nuevo Nodo en el arbol recibido
+void File::split(Nodo* arbol, string text){ 
  
     int sw = -1;
     int index;  
@@ -46,7 +48,6 @@ void File::split(Nodo* arbol, string text){
     string pag;
     Nodo* apPag = new Nodo();
       
-    //if (text[0]=='m'){
         for(char c : text){
         sw = numeros.find(c);
             if (sw!=-1){              
