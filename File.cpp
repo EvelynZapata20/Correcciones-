@@ -3,72 +3,74 @@
 #include<string.h>
 #include<stdlib.h>
 #include <algorithm>
-#include "Tree.h"
+#include "File.h"
+//#include "Tree.h"
 using namespace std;
 
-void lectura();
-void split(string);
+string numeros = "0123456789";
+string dato;
+Nodo* apSub;
+Nodo* empty;
 
-void lectura(){
-    ifstream indice;
+File::File(){}
+
+void File::lectura(){
+    ifstream file;
     string texto;
 
-    indice.open("C:\\Users\\Usuario\\CLionProjects\\Taller 2 Datos\\Indice.txt",ios::in);
+    file.open("Indice.txt",ios::in);
 
-    if (indice.fail()){
+    if (file.fail()){
         cout<<"Error leyendo el archivo";
         exit(1);
     }
 
-    while (!indice.eof()){
-        getline(indice,texto);
-        //cout<<texto<<endl;
-        split(texto);
+    Nodo *arbol = new Nodo;
+
+    while (!file.eof()){
+        getline(file,texto);        
+        split(arbol, texto);       
     }
-    indice.close();
+    file.close();
+    
+    cout<<"---- Imprimiendo Arbol ----\n"<<endl;
+    arbol->imprimir(arbol);
+    //arbol->imprimir(arbol->buscarSub(arbol,"Aves"));
 }
 
-void split(string text){
-
-    string numeros = "0123456789";
+void File::split(Nodo* arbol, string text){
+ 
     int sw = -1;
-    int index;
-    string tipo;
-    string termino;
-    int pag;
-    string paginas;
-
-    if (text[0]=='m'){
-        tipo = "Termino";
-    }
-    else{
-        tipo = "Subtermino";
-    }
-
-    for(char c : text) {
+    int index;  
+    string termino;    
+    string pag;
+    Nodo* apPag = new Nodo();
+      
+    //if (text[0]=='m'){
+        for(char c : text){
         sw = numeros.find(c);
-        if (sw != -1) {
-            index = text.find(c);
-            pag = text[index];
-            termino = text.substr(1, index - 1);
-            //paginas = text.substr(index+1,2);
-            for (int j = index + 1; j < text.length(); j += 2) {
-                paginas = text.substr(j, 2);
-                Node *subTree = new Node;
-                if (tipo == "Termino") {
-                    Node *pagTree = nullptr;
-                    insertNode(pagTree, paginas, NULL, NULL, NULL);
-                    insertNode(mainTree, termino, pag, pagTree, subTree);
-                } else {
-                    Node *pagTree = nullptr;
-                    insertNode(pagTree, paginas, NULL, NULL, NULL);
-                    insertNode(subTree, termino, pag, pagTree, NULL);
-                }
+            if (sw!=-1){              
+                index = text.find(c);
+                pag = text[index];
+                termino = text.substr(1,index-1);
+
+                for(int j = index+1; j < text.length(); j+=2){   
+                    arbol->agregarNodo(apPag, "<" + text.substr(j,2) + "> " , {}, empty, empty);      
+                }  
+                break;
             }
-                //cout<<"La palabra "<<termino<<" es un "<<tipo<<" y aparece en  "<<pag<<" paginas asi: "<< paginas<<endl;
+        }    
+   
+    if (text[0]=='m'){ 
+        
+        Nodo *subTerminos = new Nodo;
+        apSub = subTerminos;        
+        dato = termino; 
 
-
-            break;
-        }
+        arbol->agregarNodo(arbol, dato, pag, apSub, apPag);        
+      
+    }else{
+        arbol->agregarNodo(apSub, "\t"+termino, pag, empty, apPag);       
     }
+    
 }
