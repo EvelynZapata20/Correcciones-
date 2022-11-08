@@ -6,6 +6,7 @@
 using namespace std;
 
 void Menu();
+string nomPropio(string);
 Nodo *arbol;
 File *archivo = new File();
 
@@ -43,10 +44,12 @@ void Menu(){
                     break;
 			case 3: cout<<"Ingrese termino a buscar:"<<endl;
 					cin>>dato;
+					dato=nomPropio(dato);
 					arbol->buscar(arbol, dato);					
 					break;
 			case 4: cout<<"Ingrese subtermino a buscar:"<<endl;
 					cin>>dato;
+					dato=nomPropio(dato);
 					arbol->buscarSub(arbol, "\t"+dato);					
 					break;
 			case 5: cout<<"Cerrando programa!\n";
@@ -56,4 +59,12 @@ void Menu(){
 		system("pause");
 		system("cls");
 	}while(opcion != 5);
+}
+
+string nomPropio(string dato){
+	dato[0]= toupper (dato[0]);
+	for (int i = 1; i < dato.length() ; i++){
+		dato[i]= tolower (dato[i]);
+	}
+	return dato;
 }
